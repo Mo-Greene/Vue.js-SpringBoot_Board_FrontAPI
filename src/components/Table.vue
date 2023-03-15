@@ -37,7 +37,7 @@
         boardList: []
       })
 
-      axios.get("http://localhost:8080/boards/list").then(({data}) => {
+      axios.get("http://localhost:8080/boards").then(({data}) => {
         state.boardList = data.resultData.board
         console.log(state.boardList)
       })
