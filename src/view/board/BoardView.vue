@@ -51,23 +51,22 @@
   </div>
 </template>
 <script>
-
 export default {
   name: "BoardView",
   data() {
     return {
-      boardNo: 36,
       boardDetail: []
     }
   },
+  //라이프사이클 이해하자
   created() {
     this.getBoardDetail();
+    this.$route.params.boardNo;
   },
   methods: {
     async getBoardDetail() {
-      this.$axios.get(this.$serverUrl + "/boards/notice/" + this.boardNo).then(({data}) => {
+      this.$axios.get(this.$serverUrl + "/boards/notice/" + this.$route.params.boardNo).then(({data}) => {
         this.boardDetail = data.resultData
-        console.log(this.boardDetail)
       })
     },
     list() {
@@ -75,7 +74,15 @@ export default {
         path: '/'
       })
     },
-  }
+    findDelete() {
+      this.$axios.delete(this.$serverUrl + "/boards/delete/" + this.$route.params.boardNo).then(() => {
+        alert('Delete')
+        this.list()
+      }).catch((err) => {
+        alert(err)
+      })
+    },
+  },
 }
 </script>
 
