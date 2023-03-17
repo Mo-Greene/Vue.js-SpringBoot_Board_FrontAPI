@@ -7,11 +7,11 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="categoryNo">Category</label>
-            <select class="form-select" id="category" v-model="categoryNo">
+            <select class="form-select" id="category" v-model.number="categoryNo">
               <option value="0">Select Category</option>
-              <option value=1>JAVA</option>
-              <option value=2>C</option>
-              <option value=3>PYTHON</option>
+              <option value="1">JAVA</option>
+              <option value="2">C</option>
+              <option value="3">PYTHON</option>
             </select>
           </div>
         </div>
@@ -95,6 +95,9 @@ export default {
       }).then(res => {
         console.log('Success')
         console.log(res)
+        this.$router.push({
+          path: '/'
+        })
       }).catch(res => {
         console.log('Failure')
         console.log(res)

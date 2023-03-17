@@ -16,7 +16,7 @@
       <tbody>
       <tr :key="i" v-for="(board,i) in boardList">
         <td>{{ board.categoryContent }}</td>
-        <td><span @click="$router.push('/notice/' + board.boardNo)">{{ board.boardTitle }}</span></td>
+        <td><a @click="goToNotice(board.boardNo);">{{ board.boardTitle }}</a></td>
         <td>{{ board.boardContent }}</td>
         <td>{{ board.boardWriter }}</td>
         <td>{{ board.boardView }}</td>
@@ -50,6 +50,11 @@
           this.boardList = data.resultData.board
         }).catch((err) => {
           alert(err)
+        })
+      },
+      goToNotice(boardNo) {
+        this.$router.push({
+          path:'/notice/' + boardNo
         })
       },
     }
