@@ -1,10 +1,7 @@
 <template>
-  <div class="d-flex justify-content-center">
-    <ul class="pagination flex-wrap">
-      <li :key="i" v-for="(page,i) in pagination">
-        <a class="page-item">{{ page.page }}</a>
-      </li>
-    </ul>
+  <div>
+    페이지네이션
+    {{ pagination }}
   </div>
 </template>
 

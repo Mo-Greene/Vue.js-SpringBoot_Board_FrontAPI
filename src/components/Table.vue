@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div style="width: 768px; margin: auto;">
+    <h4 class="mb-3">게시글</h4>
     <table>
       <thead>
       <tr>
@@ -15,7 +16,7 @@
       <tbody>
       <tr :key="i" v-for="(board,i) in boardList">
         <td>{{ board.categoryContent }}</td>
-        <td>{{ board.boardTitle }}</td>
+        <td><span @click="$router.push('/notice/' + board.boardNo)">{{ board.boardTitle }}</span></td>
         <td>{{ board.boardContent }}</td>
         <td>{{ board.boardWriter }}</td>
         <td>{{ board.boardView }}</td>
@@ -27,22 +28,30 @@
   </div>
 </template>
 <script>
-  import axios from "axios";
-  import {reactive} from "vue";
-
   export default {
-    name: 'Table',
-    setup() {
-      const state = reactive({
-        boardList: []
-      })
-
-      axios.get("http://localhost:8080/boards").then(({data}) => {
-        state.boardList = data.resultData.board
-        console.log(state.boardList)
-      })
-
-      return state
+    data() {
+      return {
+        requestBody: {},
+        boardList: [],
+        page: this.$route.query.page ? this.$route.query.page : 1,
+        size: this.$route.query.size ? this.$route.query.size : 10,
+        keyword: this.$route.query.keyword
+      }
+    },
+    mounted() {
+      this.getBoardList()
+    },
+    methods: {
+      getBoardList() {
+        this.$axios.get(this.$serverUrl + "/boards", {
+          params: this.requestBody,
+          headers: {}
+        }).then(({data}) => {
+          this.boardList = data.resultData.board
+        }).catch((err) => {
+          alert(err)
+        })
+      },
     }
   }
 </script>
