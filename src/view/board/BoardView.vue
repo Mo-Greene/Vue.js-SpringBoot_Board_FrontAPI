@@ -74,6 +74,7 @@ export default {
         path: '/'
       })
     },
+    //todo: 게시글 삭제, 파일있을시 예외 못함
     findDelete() {
       this.$axios.delete(this.$serverUrl + "/boards/delete/" + this.$route.params.boardNo).then(() => {
         alert('Delete')
