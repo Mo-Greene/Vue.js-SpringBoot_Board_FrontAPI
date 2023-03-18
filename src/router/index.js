@@ -5,17 +5,17 @@ import BoardView from "@/view/board/BoardView";
 
 const routes = [
     {
-        path: '/',
+        path: '/boards',
         name: 'board_list',
         component: Home
     },
     {
-        path: '/write',
+        path: '/boards/write',
         name: 'board_write',
         component: Write
     },
     {
-        path: '/notice/:boardNo',
+        path: '/boards/notice/:boardNo',
         name: 'board_notice_view',
         component: BoardView
     }

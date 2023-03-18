@@ -54,7 +54,7 @@
       },
       goToNotice(boardNo) {
         this.$router.push({
-          path:'/notice/' + boardNo
+          path:'/boards/notice/' + boardNo
         })
       },
     }

@@ -43,9 +43,9 @@
       </div>
 
       <div class="buttons">
-        <button type="button" class="btn btn-primary" v-on:click="findUpdate">수정</button>&nbsp;
-        <button type="button" class="btn btn-danger" v-on:click="findDelete">삭제</button>&nbsp;
-        <button type="button" class="btn btn-dark" v-on:click="list">목록</button>
+        <button type="button" class="btn btn-primary" @click="findUpdate">수정</button>&nbsp;
+        <button type="button" class="btn btn-danger" @click="findDelete">삭제</button>&nbsp;
+        <button type="button" class="btn btn-dark" @click="list">목록</button>
       </div>
     </div>
   </div>
@@ -58,7 +58,7 @@ export default {
       boardDetail: []
     }
   },
-  //라이프사이클 이해하자
+  // todo 라이프사이클 이해해야됨
   created() {
     this.getBoardDetail();
     this.$route.params.boardNo;
@@ -71,7 +71,7 @@ export default {
     },
     list() {
       this.$router.push({
-        path: '/'
+        path: '/boards'
       })
     },
     //todo: 게시글 삭제, 파일있을시 예외 못함
@@ -81,6 +81,12 @@ export default {
         this.list()
       }).catch((err) => {
         alert(err)
+      })
+    },
+    //todo: 게시글 등록을 수정으로 사용해야될듯
+    findUpdate() {
+      this.$router.push({
+        path: '/boards/write'
       })
     },
   },

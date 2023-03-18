@@ -52,8 +52,9 @@
           </div>
         </div>
 
-        <div class="mb-4">
-          <button class="btn btn-primary btn-lg btn-block" @click="submit()">Posting</button>
+        <div class="mb-3">
+          <button class="btn btn-primary btn-lg btn-light" @click="goList">뒤로가기</button>&nbsp;
+          <button class="btn btn-primary btn-lg btn-block" @click="submit">등록</button>
         </div>
       </div>
     </div>
@@ -96,16 +97,19 @@ export default {
         console.log('Success')
         console.log(res)
         this.$router.push({
-          path: '/'
+          path: '/boards'
         })
-      }).catch(res => {
-        console.log('Failure')
-        console.log(res)
-      })
+      }).catch()
     },
 
     fileUpload(event) {
       this.file = event.target.files[0];
+    },
+
+    goList() {
+      this.$router.push({
+        path: "/boards"
+      })
     },
   }
 }

@@ -1,7 +1,6 @@
 <template>
   <div>
-    페이지네이션
-    {{ pagination }}
+    {{ paging.page }}
   </div>
 </template>
 
@@ -22,6 +21,25 @@ export default {
     })
 
     return state
+  },
+  data() {
+    return {
+      paging: []
+    }
+  },
+  mounted() {
+    this.getPagination()
+  },
+  methods: {
+    getPagination() {
+      this.$axios.get(this.$serverUrl + "/boards")
+          .then(({data}) => {
+            this.paging = data.resultData.page
+            console.log(this.paging)})
+          .catch((err) => {
+            alert(err)
+          })
+    }
   }
 }
 </script>
