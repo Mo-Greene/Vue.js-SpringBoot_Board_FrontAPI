@@ -5,25 +5,9 @@
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
+## todo
+- 공통으로 사용하는 함수는 common.js 로 빼놓자
+- 우선은 boardList 최우선으로 작업하자
 
 게시판 컴포넌트에 대해서 자주 사용되는것은 컴포넌트화로
 부모 컴포넌트에서 자식컴포넌트에게 보내주는게 맞다.

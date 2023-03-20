@@ -1,18 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from "@/view/board/Home";
-import Write from "@/components/Write";
 import BoardView from "@/view/board/BoardView";
+import BoardList from "@/view/board/BoardList";
+import BoardWrite from "@/view/board/BoardWrite";
 
 const routes = [
     {
         path: '/boards',
         name: 'board_list',
-        component: Home
+        component: BoardList
     },
     {
         path: '/boards/write',
         name: 'board_write',
-        component: Write
+        component: BoardWrite
     },
     {
         path: '/boards/notice/:boardNo',

@@ -1,9 +1,8 @@
 <template>
   <div class="container">
     <div class="input-form-background row">
+      <h4 class="mb-3">게시글 등록</h4>
       <div class="input-form col-md-12 mx-auto">
-        <h4 class="mb-3">게시글 등록</h4>
-
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="categoryNo">Category</label>
@@ -53,67 +52,91 @@
         </div>
 
         <div class="mb-3">
-          <button class="btn btn-primary btn-lg btn-light" @click="goList">뒤로가기</button>&nbsp;
-          <button class="btn btn-primary btn-lg btn-block" @click="submit">등록</button>
+
         </div>
+        <button class="btn btn-primary btn-light" @click="list">목록</button>&nbsp;
+        <button class="btn btn-primary btn-block" @click="submit">등록</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {reactive} from "vue";
 import axios from "axios";
+import {useRouter} from "vue-router";
 
 export default {
-  data() {
-    return {
+  name: "BoardWrite",
+  setup() {
+    const router = useRouter();
+
+    const state = reactive({
       categoryNo: '',
       boardTitle: '',
       boardContent: '',
       boardWriter: '',
       boardPassword: '',
       boardPasswordCheck: '',
-      file: ''
-    }
-  },
-  methods: {
-    submit() {
+      file: '',
+    });
+
+    const submit = async () => {
       const formData = new FormData();
 
-      formData.append('file', this.file, this.file.name)
+      formData.append('file', state.file);
       formData.append('boardDTO', new Blob([JSON.stringify({
-        categoryNo: this.categoryNo,
-        boardTitle: this.boardTitle,
-        boardContent: this.boardContent,
-        boardWriter: this.boardWriter,
-        boardPassword: this.boardPassword,
-        boardPasswordCheck: this.boardPasswordCheck
-      })], {type: "application/json"})
+                categoryNo: state.categoryNo,
+                boardTitle: state.boardTitle,
+                boardContent: state.boardContent,
+                boardWriter: state.boardWriter,
+                boardPassword: state.boardPassword,
+                boardPasswordCheck: state.boardPasswordCheck,
+              })],
+              {type: 'application/json'},
+          )
       );
 
-      axios.post('http://localhost:8080/boards/write', formData, {
-        headers: {'Content-Type': 'multipart/form-data'}
-      }).then(res => {
-        console.log('Success')
-        console.log(res)
-        this.$router.push({
-          path: '/boards'
-        })
-      }).catch()
-    },
+      try {
+        const response = await axios.post('boards/write', formData, {
+          headers: {'Content-Type': 'multipart/form-data'},
+        });
 
-    fileUpload(event) {
-      this.file = event.target.files[0];
-    },
+        if (response.data.resultCode === 201) {
+          alert('등록 성공');
+          this.$router.push({
+            path: '/boards',
+          });
+        }
+      } catch (error) {
+        alert(error)
+      }
+    };
 
-    goList() {
-      this.$router.push({
+    const fileUpload = (event) => {
+      state.file = event.target.files[0];
+    };
+
+    /**
+     * 전체 게시글로 이동
+     * //todo 나중에 공통 js로 해놓자
+     */
+    const list = () => {
+      router.push({
         path: "/boards"
-      })
-    },
+      });
+    };
+
+    return {
+      state,
+      submit,
+      fileUpload,
+      list
+    }
   }
 }
 </script>
+
 <style scoped>
 
 </style>

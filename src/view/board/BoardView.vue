@@ -5,45 +5,45 @@
       <div class="row">
         <div class="col-md-6 mb-3">
           Title :
-          <label>{{ boardDetail.boardTitle }}</label>
+          <label>{{ state.boardDetail.boardTitle }}</label>
         </div>
         <div class="col-md-6 mb-3">
           Writer :
-          <label>{{ boardDetail.boardWriter }}</label>
+          <label>{{ state.boardDetail.boardWriter }}</label>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6 mb-3">
           Category :
-          <label>{{ boardDetail.categoryContent }}</label>
+          <label>{{ state.boardDetail.categoryContent }}</label>
         </div>
         <div class="col-md-6 mb-3">
           View :
-          <label>{{ boardDetail.boardView }}</label>
+          <label>{{ state.boardDetail.boardView }}</label>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6 mb-3">
           RegDate :
-          <label>{{ boardDetail.boardRegDate }}</label>
+          <label>{{ state.boardDetail.boardRegDate }}</label>
         </div>
         <div class="col-md-6 mb-3">
           ModDate :
-          <label>{{ boardDetail.boardModDate }}</label>
+          <label>{{ state.boardDetail.boardModDate }}</label>
         </div>
       </div>
 
       <div class="row">
         <div class="mb-3">
           Content :
-          <label>{{ boardDetail.boardContent }}</label>
+          <label>{{ state.boardDetail.boardContent }}</label>
         </div>
       </div>
 
       <div class="buttons">
-        <button type="button" class="btn btn-primary" @click="findUpdate">수정</button>&nbsp;
+        <button type="button" class="btn btn-primary">수정</button>&nbsp;
         <button type="button" class="btn btn-danger" @click="findDelete">삭제</button>&nbsp;
         <button type="button" class="btn btn-dark" @click="list">목록</button>
       </div>
@@ -51,48 +51,60 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+import {onMounted, reactive} from "vue";
+import {useRouter} from "vue-router";
+
 export default {
   name: "BoardView",
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       boardDetail: []
+    });
+
+    const router = useRouter();
+    console.log(router)
+
+    /**
+     * 게시글 상세조회
+     * @returns {Promise<void>}
+     */
+    const getBoardDetail = async () => {
+      const response = await axios.get(
+          "boards/notice/" + router.currentRoute.value.params.boardNo
+      );
+      state.boardDetail = response.data.resultData;
+    };
+
+    /**
+     * 전체 게시글로 이동
+     * //todo 나중에 공통 js로 해놓자
+     */
+    const list = () => {
+      router.push({
+        path: "/boards"
+      });
+    };
+
+    /**
+     * 게시글 삭제
+     * @returns {Promise<void>}
+     */
+    const findDelete = async () => {
+      await axios.delete("boards/delete/" + router.currentRoute.value.params.boardNo);
+      alert("삭제 완료");
+      list();
     }
-  },
-  // todo 라이프사이클 이해해야됨
-  created() {
-    this.getBoardDetail();
-    this.$route.params.boardNo;
-  },
-  methods: {
-    async getBoardDetail() {
-      this.$axios.get(this.$serverUrl + "/boards/notice/" + this.$route.params.boardNo).then(({data}) => {
-        this.boardDetail = data.resultData
-      })
-    },
-    list() {
-      this.$router.push({
-        path: '/boards'
-      })
-    },
-    //todo: 게시글 삭제, 파일있을시 예외
-    findDelete() {
-      this.$axios.delete(this.$serverUrl + "/boards/delete/" + this.$route.params.boardNo).then(() => {
-        alert('Delete')
-        this.list()
-      }).catch((err) => {
-        alert(err)
-      })
-    },
-    //todo: 게시글 등록을 수정으로 사용해야될듯
-    findUpdate() {
-      this.$router.push({
-        path: '/boards/write'
-      })
-    },
+
+    onMounted(() => {
+      getBoardDetail();
+    });
+
+    return {
+      state,
+      list,
+      findDelete
+    }
   },
 }
 </script>
-
-<style scoped>
-
-</style>
