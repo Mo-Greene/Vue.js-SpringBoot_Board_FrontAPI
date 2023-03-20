@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from "@/view/Home";
+import Home from "@/view/board/Home";
 import Write from "@/components/Write";
 import BoardView from "@/view/board/BoardView";
 
