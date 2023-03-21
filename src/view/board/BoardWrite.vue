@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import {reactive} from "vue";
+import {ref} from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
 
@@ -71,27 +71,25 @@ export default {
   setup() {
     const router = useRouter();
 
-    const state = reactive({
-      categoryNo: '',
-      boardTitle: '',
-      boardContent: '',
-      boardWriter: '',
-      boardPassword: '',
-      boardPasswordCheck: '',
-      file: '',
-    });
+    const categoryNo = ref();
+    const boardTitle = ref();
+    const boardContent = ref();
+    const boardWriter = ref();
+    const boardPassword = ref();
+    const boardPasswordCheck = ref();
+    const file = ref();
 
     const submit = async () => {
       const formData = new FormData();
 
-      formData.append('file', state.file);
+      formData.append('file', file);
       formData.append('boardDTO', new Blob([JSON.stringify({
-                categoryNo: state.categoryNo,
-                boardTitle: state.boardTitle,
-                boardContent: state.boardContent,
-                boardWriter: state.boardWriter,
-                boardPassword: state.boardPassword,
-                boardPasswordCheck: state.boardPasswordCheck,
+                categoryNo: categoryNo.value,
+                boardTitle: boardTitle.value,
+                boardContent: boardContent.value,
+                boardWriter: boardWriter.value,
+                boardPassword: boardPassword.value,
+                boardPasswordCheck: boardPasswordCheck.value,
               })],
               {type: 'application/json'},
           )
@@ -104,9 +102,7 @@ export default {
 
         if (response.data.resultCode === 201) {
           alert('등록 성공');
-          this.$router.push({
-            path: '/boards',
-          });
+          list();
         }
       } catch (error) {
         alert(error)
@@ -114,7 +110,8 @@ export default {
     };
 
     const fileUpload = (event) => {
-      state.file = event.target.files[0];
+      this.file = event.target.files[0];
+      console.log(this.file)
     };
 
     /**
@@ -128,10 +125,16 @@ export default {
     };
 
     return {
-      state,
       submit,
       fileUpload,
-      list
+      list,
+      categoryNo,
+      boardTitle,
+      boardContent,
+      boardWriter,
+      boardPassword,
+      boardPasswordCheck,
+      file
     }
   }
 }

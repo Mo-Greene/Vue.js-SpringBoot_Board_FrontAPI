@@ -6,4 +6,5 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import './axios'
 
 const app = createApp(App)
-app.use(router).mount('#app')
+app.use(router)
+    .mount('#app')
