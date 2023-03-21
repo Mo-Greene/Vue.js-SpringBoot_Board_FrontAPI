@@ -42,6 +42,17 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="mb-3" :key="i" v-for="(reply,i) in state.boardDetail.replyList">
+          <label>{{ reply.replyContent }}</label>
+          <div>{{ dateFormat(reply.replyRegDate) }}</div>
+        </div>
+      </div>
+
+      <div class="Component-Reply">
+        <ReplyWrite/>
+      </div>
+
       <div class="buttons">
         <button type="button" class="btn btn-primary">수정</button>&nbsp;
         <button type="button" class="btn btn-danger" @click="findDelete">삭제</button>&nbsp;
@@ -52,17 +63,22 @@
 </template>
 <script>
 import axios from "axios";
-import {onMounted, reactive} from "vue";
+import {onMounted, provide, reactive} from "vue";
 import {useRouter} from "vue-router";
+import ReplyWrite from "@/components/ReplyWrite";
+import {dateFormat} from "@/assets/js/common";
 
 export default {
   name: "BoardView",
+  components: {ReplyWrite},
   setup() {
     const state = reactive({
       boardDetail: []
     });
 
     const router = useRouter();
+
+    provide('boardNo', router.currentRoute.value.params.boardNo)
 
     /**
      * 게시글 상세조회
@@ -102,7 +118,8 @@ export default {
     return {
       state,
       list,
-      findDelete
+      findDelete,
+      dateFormat
     }
   },
 }

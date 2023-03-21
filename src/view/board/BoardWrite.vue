@@ -97,7 +97,7 @@ export default {
 
       try {
         const response = await axios.post('boards/write', formData, {
-          headers: {'Content-Type': 'multipart/form-data'},
+          headers: {'Content-Type': 'multipart/form-data'}
         });
 
         if (response.data.resultCode === 201) {
