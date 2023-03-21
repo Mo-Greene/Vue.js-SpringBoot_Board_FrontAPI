@@ -63,7 +63,6 @@ export default {
     });
 
     const router = useRouter();
-    console.log(router)
 
     /**
      * 게시글 상세조회

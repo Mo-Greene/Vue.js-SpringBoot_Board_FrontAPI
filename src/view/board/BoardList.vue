@@ -21,8 +21,8 @@
           <td>{{ board.boardContent }}</td>
           <td>{{ board.boardWriter }}</td>
           <td>{{ board.boardView }}</td>
-          <td>{{ board.boardRegDate }}</td>
-          <td>{{ board.boardModDate }}</td>
+          <td>{{ dateFormat(board.boardRegDate) }}</td>
+          <td>{{ dateFormat(board.boardModDate) }}</td>
         </tr>
         </tbody>
       </table>
@@ -60,7 +60,8 @@
 import axios from "axios";
 import {reactive, onMounted, ref} from "vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+import '@vuepic/vue-datepicker/dist/main.css';
+import { dateFormat } from "@/assets/js/common";
 
 export default {
   name: "BoardList",
@@ -83,7 +84,6 @@ export default {
           to: date.value[1]
         }
       });
-      console.log(response.data)
       state.boardList = response.data.resultData.board;
     };
 
@@ -104,6 +104,7 @@ export default {
       state,
       date,
       submitQuery,
+      dateFormat,
       keyword,
       categoryNo
     }
