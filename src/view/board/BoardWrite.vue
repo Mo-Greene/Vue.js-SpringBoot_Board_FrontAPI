@@ -18,11 +18,11 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="boardTitle">Title</label>
-            <input type="text" class="form-control" id="boardTitle" placeholder="" v-model="boardTitle">
+            <input type="text" class="form-control" id="boardTitle" v-model="boardTitle">
           </div>
           <div class="col-md-6 mb-3">
             <label for="boardWriter">Writer</label>
-            <input type="text" class="form-control" id="boardWriter" placeholder="" v-model="boardWriter">
+            <input type="text" class="form-control" id="boardWriter" v-model="boardWriter">
           </div>
         </div>
 

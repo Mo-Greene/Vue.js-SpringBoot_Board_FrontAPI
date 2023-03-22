@@ -111,6 +111,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 table {
   font-family: Arial, sans-serif;

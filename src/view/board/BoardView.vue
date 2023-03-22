@@ -1,4 +1,8 @@
 <template>
+  <div v-if="isModalOpen === true">
+    <PasswordCheckModal/>
+  </div>
+
   <div style="width: 768px; margin: auto;">
     <h4 class="mb-3">게시글 - 조회</h4>
     <div>
@@ -53,32 +57,37 @@
         <ReplyWrite/>
       </div>
 
+<!--      todo 모달창 작성해야됨-->
       <div class="buttons">
-        <button type="button" class="btn btn-primary">수정</button>&nbsp;
+        <button type="button" class="btn btn-primary" @click="isModalOpen = true">수정</button>&nbsp;
         <button type="button" class="btn btn-danger" @click="findDelete">삭제</button>&nbsp;
         <button type="button" class="btn btn-dark" @click="list">목록</button>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import axios from "axios";
-import {onMounted, provide, reactive} from "vue";
+import {onMounted, provide, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 import ReplyWrite from "@/components/ReplyWrite";
 import {dateFormat} from "@/assets/js/common";
+import PasswordCheckModal from "@/components/PasswordCheckModal";
 
 export default {
   name: "BoardView",
-  components: {ReplyWrite},
+  components: {PasswordCheckModal, ReplyWrite},
   setup() {
+
+    const router = useRouter();
+    provide('boardNo', router.currentRoute.value.params.boardNo)
+
     const state = reactive({
       boardDetail: []
     });
 
-    const router = useRouter();
-
-    provide('boardNo', router.currentRoute.value.params.boardNo)
+    const isModalOpen = ref(false);
 
     /**
      * 게시글 상세조회
@@ -119,8 +128,28 @@ export default {
       state,
       list,
       findDelete,
-      dateFormat
+      dateFormat,
+      isModalOpen
     }
   },
 }
 </script>
+
+<style>
+body {
+  margin : 0
+}
+div {
+  box-sizing: border-box;
+}
+.black-bg {
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  position: fixed; padding: 20px;
+}
+.white-bg {
+  width: 100%; background: white;
+  border-radius: 8px;
+  padding: 20px;
+}
+</style>
