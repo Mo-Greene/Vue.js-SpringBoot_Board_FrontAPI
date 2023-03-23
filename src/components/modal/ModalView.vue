@@ -1,5 +1,5 @@
 <template>
-  <div class="modal">
+  <div>
     <div class="overlay" @click="$emit('close-modal')"></div>
     <div class="modal-card">
       <slot/>
@@ -15,7 +15,6 @@ export default {
 
 <style scoped>
 /* Modal */
-.modal,
 .overlay {
   width: 100%;
   height: 100%;

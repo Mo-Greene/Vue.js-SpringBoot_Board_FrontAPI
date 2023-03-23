@@ -1,8 +1,6 @@
 <template>
-  <div class="button-modal">
-    <ModalView v-if="isModalViewed" @close-modal="isModalViewed = false">
-      <PasswordCheck/>
-    </ModalView>
+  <div v-if="isModalViewed" @close-modal="isModalViewed = false">
+    <ModalView/>
   </div>
 
   <div style="width: 768px; margin: auto;">
@@ -65,6 +63,15 @@
         <button type="button" class="btn btn-dark" @click="list">목록</button>
       </div>
     </div>
+
+    <div>
+      isModalView : {{ isModalViewed }}
+    </div>
+    <div v-if="wtf">
+      생성!
+    </div>
+
+    <button @click="wtf = true">버튼</button>
   </div>
 </template>
 
@@ -75,11 +82,10 @@ import {useRouter} from "vue-router";
 import ReplyWrite from "@/components/ReplyWrite";
 import {dateFormat} from "@/assets/js/common";
 import ModalView from "@/components/modal/ModalView";
-import PasswordCheck from "@/components/modal/content/PasswordCheck";
 
 export default {
   name: "BoardView",
-  components: {PasswordCheck, ReplyWrite, ModalView},
+  components: {ModalView, ReplyWrite},
   setup() {
     const router = useRouter();
     provide('boardNo', router.currentRoute.value.params.boardNo)
@@ -88,6 +94,7 @@ export default {
 
     const isModalViewed = ref(false);
 
+    const wtf = ref(false);
     /**
      * 게시글 상세조회
      * @returns {Promise<void>}
@@ -128,7 +135,8 @@ export default {
       findDelete,
       dateFormat,
       isModalViewed,
-      boardDetail
+      boardDetail,
+      wtf
     }
   },
 }
