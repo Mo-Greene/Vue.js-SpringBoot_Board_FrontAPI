@@ -15,7 +15,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr :key="i" v-for="(board,i) in state.boardList">
+        <tr :key="i" v-for="(board,i) in boardList">
           <td>{{ board.categoryContent }}</td>
           <td><a @click="$router.push('/boards/notice/' + board.boardNo)">{{ board.boardTitle }}</a></td>
           <td>{{ board.boardContent }}</td>
@@ -28,7 +28,9 @@
       </table>
     </div>
 
-    <div class="row-cols-3">
+    <Pagination/>
+
+    <div class="row-cols-3" id="findQuery">
       <div class="mb-sm-3">
         <vue-date-picker v-model="date" placeholder="Select Date" range multi-calendars/>
       </div>
@@ -58,22 +60,21 @@
 
 <script>
 import axios from "axios";
-import {reactive, onMounted, ref} from "vue";
+import {onMounted, ref, provide} from "vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { dateFormat } from "@/assets/js/common";
+import Pagination from "@/components/Pagination";
 
 export default {
   name: "BoardList",
-  components: {VueDatePicker},
+  components: {Pagination, VueDatePicker},
   setup() {
     const date = ref();
     const keyword = ref();
     const categoryNo = ref();
-
-    const state = reactive({
-      boardList: []
-    });
+    const boardList = ref([]);
+    const pagination = ref([]);
 
     const submitQuery = async () => {
       const response = await axios.get("boards", {
@@ -84,12 +85,14 @@ export default {
           to: date.value[1]
         }
       });
-      state.boardList = response.data.resultData.board;
+      boardList.value = response.data.resultData.board;
+      pagination.value = response.data.resultData.page;
     };
 
     const getBoardList = async () => {
       const response = await axios.get("boards");
-      state.boardList = response.data.resultData.board;
+      boardList.value = response.data.resultData.board;
+      pagination.value = response.data.resultData.page;
     };
 
     onMounted(() => {
@@ -100,13 +103,16 @@ export default {
       date.value = [startDate, endDate];
     });
 
+    provide('pagination', pagination)
+
     return {
-      state,
       date,
       submitQuery,
       dateFormat,
       keyword,
-      categoryNo
+      categoryNo,
+      boardList,
+      pagination
     }
   }
 }

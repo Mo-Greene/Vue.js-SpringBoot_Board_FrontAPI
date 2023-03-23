@@ -11,6 +11,7 @@
   </div>
 </template>
 
+<!-- todo 댓글 부모컴포넌트에서 값들 전달해서 사용하자-->
 <script>
 import {inject, ref} from "vue";
 import axios from "axios";

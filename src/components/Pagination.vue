@@ -1,46 +1,24 @@
 <template>
   <div>
-    {{ paging.page }}
+    {{pagination}}
   </div>
 </template>
 
 <script>
-import {reactive} from "vue";
-import axios from "axios";
+
+import {inject} from "vue";
 
 export default {
   name: "Pagination",
+  components: {},
   setup() {
-    const state = reactive({
-      pagination: []
-    })
+    const pagination = inject('pagination')
+    console.log(pagination)
 
-    axios.get("http://localhost:8080/boards").then(({data}) => {
-      state.pagination = data.resultData.page
-      console.log(state.pagination)
-    })
-
-    return state
-  },
-  data() {
     return {
-      paging: []
+      pagination
     }
   },
-  mounted() {
-    this.getPagination()
-  },
-  methods: {
-    getPagination() {
-      this.$axios.get(this.$serverUrl + "/boards")
-          .then(({data}) => {
-            this.paging = data.resultData.page
-            console.log(this.paging)})
-          .catch((err) => {
-            alert(err)
-          })
-    }
-  }
 }
 </script>
 

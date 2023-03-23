@@ -1,6 +1,8 @@
 <template>
-  <div v-if="isModalOpen === true">
-    <PasswordCheckModal/>
+  <div class="button-modal">
+    <ModalView v-if="isModalViewed" @close-modal="isModalViewed = false">
+      <PasswordCheck/>
+    </ModalView>
   </div>
 
   <div style="width: 768px; margin: auto;">
@@ -9,45 +11,45 @@
       <div class="row">
         <div class="col-md-6 mb-3">
           Title :
-          <label>{{ state.boardDetail.boardTitle }}</label>
+          <label>{{ boardDetail.boardTitle }}</label>
         </div>
         <div class="col-md-6 mb-3">
           Writer :
-          <label>{{ state.boardDetail.boardWriter }}</label>
+          <label>{{ boardDetail.boardWriter }}</label>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6 mb-3">
           Category :
-          <label>{{ state.boardDetail.categoryContent }}</label>
+          <label>{{ boardDetail.categoryContent }}</label>
         </div>
         <div class="col-md-6 mb-3">
           View :
-          <label>{{ state.boardDetail.boardView }}</label>
+          <label>{{ boardDetail.boardView }}</label>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6 mb-3">
           RegDate :
-          <label>{{ state.boardDetail.boardRegDate }}</label>
+          <label>{{ dateFormat(boardDetail.boardRegDate) }}</label>
         </div>
         <div class="col-md-6 mb-3">
           ModDate :
-          <label>{{ state.boardDetail.boardModDate }}</label>
+          <label>{{ dateFormat(boardDetail.boardModDate) }}</label>
         </div>
       </div>
 
       <div class="row">
         <div class="mb-3">
           Content :
-          <label>{{ state.boardDetail.boardContent }}</label>
+          <label>{{ boardDetail.boardContent }}</label>
         </div>
       </div>
 
       <div class="row">
-        <div class="mb-3" :key="i" v-for="(reply,i) in state.boardDetail.replyList">
+        <div class="mb-3" :key="i" v-for="(reply,i) in boardDetail.replyList">
           <label>{{ reply.replyContent }}</label>
           <div>{{ dateFormat(reply.replyRegDate) }}</div>
         </div>
@@ -57,9 +59,8 @@
         <ReplyWrite/>
       </div>
 
-<!--      todo 모달창 작성해야됨-->
       <div class="buttons">
-        <button type="button" class="btn btn-primary" @click="isModalOpen = true">수정</button>&nbsp;
+        <button type="button" class="btn btn-primary" @click="isModalViewed = true">수정</button>&nbsp;
         <button type="button" class="btn btn-danger" @click="findDelete">삭제</button>&nbsp;
         <button type="button" class="btn btn-dark" @click="list">목록</button>
       </div>
@@ -69,25 +70,23 @@
 
 <script>
 import axios from "axios";
-import {onMounted, provide, reactive, ref} from "vue";
+import {onMounted, provide, ref} from "vue";
 import {useRouter} from "vue-router";
 import ReplyWrite from "@/components/ReplyWrite";
 import {dateFormat} from "@/assets/js/common";
-import PasswordCheckModal from "@/components/PasswordCheckModal";
+import ModalView from "@/components/modal/ModalView";
+import PasswordCheck from "@/components/modal/content/PasswordCheck";
 
 export default {
   name: "BoardView",
-  components: {PasswordCheckModal, ReplyWrite},
+  components: {PasswordCheck, ReplyWrite, ModalView},
   setup() {
-
     const router = useRouter();
     provide('boardNo', router.currentRoute.value.params.boardNo)
 
-    const state = reactive({
-      boardDetail: []
-    });
+    const boardDetail = ref([]);
 
-    const isModalOpen = ref(false);
+    const isModalViewed = ref(false);
 
     /**
      * 게시글 상세조회
@@ -97,7 +96,7 @@ export default {
       const response = await axios.get(
           "boards/notice/" + router.currentRoute.value.params.boardNo
       );
-      state.boardDetail = response.data.resultData;
+      boardDetail.value = response.data.resultData;
     };
 
     /**
@@ -125,31 +124,12 @@ export default {
     });
 
     return {
-      state,
       list,
       findDelete,
       dateFormat,
-      isModalOpen
+      isModalViewed,
+      boardDetail
     }
   },
 }
 </script>
-
-<style>
-body {
-  margin : 0
-}
-div {
-  box-sizing: border-box;
-}
-.black-bg {
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  position: fixed; padding: 20px;
-}
-.white-bg {
-  width: 100%; background: white;
-  border-radius: 8px;
-  padding: 20px;
-}
-</style>
