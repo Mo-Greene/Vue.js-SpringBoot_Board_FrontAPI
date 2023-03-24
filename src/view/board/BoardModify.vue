@@ -8,6 +8,21 @@
             <label for="categoryContent">Category : </label>
             {{ boardDetail.categoryContent }}
           </div>
+          <div class="col-md-6 mb-3">
+            <label for="view">View : </label>
+            {{ boardDetail.boardView }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="regDate">RegDate : </label>
+            {{ dateFormat(boardDetail.boardRegDate) }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="modDate">ModDate : </label>
+            {{ dateFormat(boardDetail.boardModDate) }}
+          </div>
         </div>
 
         <div class="row">
@@ -55,18 +70,49 @@
 <script>
 import {useRouter} from "vue-router/dist/vue-router";
 import * as boardsApi from "@/api/boardsApi";
-import {onMounted, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
+import {dateFormat} from "@/assets/js/common";
+import axios from "axios";
 
 export default {
   name: "BoardModify",
   setup() {
     const router = useRouter();
     const boardDetail = ref([])
+    const boardTitle = ref();
+    const boardWriter = ref();
+    const boardContent = ref();
+    const boardPassword = ref();
+    const file = ref();
 
     const getBoardDetail = async () => {
       const response = await boardsApi.getArticleView(router.currentRoute.value.params.boardNo);
       boardDetail.value = response.data.resultData;
-      console.log(boardDetail.value)
+    };
+
+    // todo 수정시 비밀번호가 필요없는데 또 들어가야된다고 뜬다. 확인해서 고치자
+    const submit = async () => {
+      const boardDTO = reactive({
+        boardTitle: boardTitle.value,
+        boardWriter: boardWriter.value,
+        boardContent: boardContent.value,
+        boardPassword: boardPassword.value
+      })
+
+      try {
+        const response = await axios.put('boards/modify/' + router.currentRoute.value.params.boardNo, boardDTO, {
+          headers: {'Content-Type': 'application/json'}
+        });
+
+        console.log(response)
+
+        if (response.data.resultCode === 200) {
+          alert('등록 성공');
+          list();
+        }
+      } catch (error) {
+        alert(error)
+      }
     };
 
     /**
@@ -79,14 +125,27 @@ export default {
       });
     };
 
+    const fileUpload = (event) => {
+      this.file = event.target.files[0];
+      console.log(this.file)
+    };
+
     onMounted(() => {
        getBoardDetail();
     })
 
     return {
       router,
+      dateFormat,
       list,
-      boardDetail
+      fileUpload,
+      submit,
+      file,
+      boardDetail,
+      boardTitle,
+      boardWriter,
+      boardContent,
+      boardPassword
     }
   },
 }
