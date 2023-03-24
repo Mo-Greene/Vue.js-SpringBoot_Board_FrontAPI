@@ -76,7 +76,7 @@
 
 <script>
 import axios from "axios";
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import {dateFormat} from "@/assets/js/common";
@@ -92,11 +92,14 @@ export default {
     const boardList = ref([]);
     const page = ref();
     const size = ref();
-    // const currentPage = 1;
-    // const perPage = 10;
-    // const rows = computed(() => {
-    //   return boardList.value.length;
-    // });
+    const pagination = ref([]);
+
+    // 페이지네이션
+    const currentPage = 1;
+    const perPage = 10;
+    const rows = computed(() => {
+      return boardList.value.length;
+    });
 
     const submitQuery = async () => {
       const response = await axios.get("boards", {
@@ -111,18 +114,10 @@ export default {
       boardList.value = response.data.resultData.board;
     };
 
-    // const getBoardList = async () => {
-    //   const response = await axios.get("boards");
-    //   boardList.value = response.data.resultData.board;
-    // };
-    // const getBoardList = async () => {
-    //   const response = await axios.get("boards");
-    //   boardList.value = response.data.resultData;
-    // };
-
     const getBoardList = async () => {
       const response = await boardsApi.getArticle();
-      boardList.value = response.data.resultData
+      boardList.value = response.data.resultData.board;
+      pagination.value = response.data.resultData.page;
     };
 
 
@@ -143,21 +138,22 @@ export default {
       page,
       size,
       boardList,
-      // currentPage,
-      // perPage,
-      // rows
+      currentPage,
+      perPage,
+      rows,
+      pagination
     }
   },
   data() {
     return {
-      perPage: 5,
-      currentPage: 1,
+      // perPage: 5,
+      // currentPage: 1,
     }
   },
   computed: {
-    rows() {
-      return this.boardList.length;
-    },
+    // rows() {
+    //   return this.boardList.length;
+    // },
   }
 }
 </script>

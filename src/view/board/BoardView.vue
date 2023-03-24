@@ -1,6 +1,19 @@
 <template>
-  <div v-if="isModalViewed" @close-modal="isModalViewed = false">
-    <ModalView/>
+  <div id="modify-modal" class="black-bg" v-if="isModifyModal === true">
+    <div class="white-bg">
+      <h3>수정 비밀번호 확인</h3>
+      <input type="password" class="form-control" v-model="passwordCheck">
+      <button @click="isModifyModal = false" class="btn btn-light">닫기</button>&nbsp;
+      <button @click="modifySubmit" class="btn btn-primary">확인</button>
+    </div>
+  </div>
+  <div id="delete-modal" class="black-bg" v-if="isDeleteModal === true">
+    <div class="white-bg">
+      <h3>삭제 비밀번호 확인</h3>
+      <input type="password" class="form-control" v-model="passwordCheck">
+      <button @click="isDeleteModal = false" class="btn btn-light">닫기</button>&nbsp;
+      <button @click="deleteSubmit" class="btn btn-primary">확인</button>
+    </div>
   </div>
 
   <div style="width: 768px; margin: auto;">
@@ -58,51 +71,60 @@
       </div>
 
       <div class="buttons">
-        <button type="button" class="btn btn-primary" @click="isModalViewed = true">수정</button>&nbsp;
-        <button type="button" class="btn btn-danger" @click="findDelete">삭제</button>&nbsp;
+        <button type="button" class="btn btn-primary" @click="isModifyModal = true">수정</button>&nbsp;
+        <button type="button" class="btn btn-danger" @click="isDeleteModal = true">삭제</button>&nbsp;
         <button type="button" class="btn btn-dark" @click="list">목록</button>
       </div>
     </div>
-
-    <div>
-      isModalView : {{ isModalViewed }}
-    </div>
-    <div v-if="wtf">
-      생성!
-    </div>
-
-    <button @click="wtf = true">버튼</button>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import {onMounted, provide, ref} from "vue";
+import {onMounted, provide, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 import ReplyWrite from "@/components/ReplyWrite";
 import {dateFormat} from "@/assets/js/common";
-import ModalView from "@/components/modal/ModalView";
+import * as boardsApi from '@/api/boardsApi';
 
 export default {
   name: "BoardView",
-  components: {ModalView, ReplyWrite},
+  components: {ReplyWrite},
   setup() {
     const router = useRouter();
     provide('boardNo', router.currentRoute.value.params.boardNo)
 
     const boardDetail = ref([]);
+    const isModifyModal = ref(false);
+    const isDeleteModal = ref(false);
+    const passwordCheck = ref('');
 
-    const isModalViewed = ref(false);
+    const deleteSubmit = async () => {
+      const boardDTO = reactive({
+        boardPassword: passwordCheck.value
+      })
 
-    const wtf = ref(false);
+      //todo 하나의 모달창으로 수정, 삭제를 한꺼번에 처리한다는게 과연 가능할까;
+      try {
+        const response = await axios.post('boards/password/' + router.currentRoute.value.params.boardNo,
+            boardDTO,
+            {headers: {'Content-Type': 'application/json'}}
+        );
+
+        if (response.status === 204) {
+          await findDelete();
+          alert('Delete Article')
+        }
+      } catch (error) {
+        alert(error)
+      }
+    }
     /**
      * 게시글 상세조회
      * @returns {Promise<void>}
      */
     const getBoardDetail = async () => {
-      const response = await axios.get(
-          "boards/notice/" + router.currentRoute.value.params.boardNo
-      );
+      const response = await boardsApi.getArticleView(router.currentRoute.value.params.boardNo);
       boardDetail.value = response.data.resultData;
     };
 
@@ -121,6 +143,7 @@ export default {
      * @returns {Promise<void>}
      */
     const findDelete = async () => {
+      console.log('delete?')
       await axios.delete("boards/delete/" + router.currentRoute.value.params.boardNo);
       alert("삭제 완료");
       list();
@@ -134,10 +157,31 @@ export default {
       list,
       findDelete,
       dateFormat,
-      isModalViewed,
+      isModifyModal,
+      isDeleteModal,
       boardDetail,
-      wtf
+      passwordCheck,
+      deleteSubmit
     }
   },
 }
 </script>
+
+<style>
+.black-bg {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.432);
+  position: fixed;
+  padding: 20px;
+}
+
+.white-bg {
+  width: 100%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+</style>

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import BoardView from "@/view/board/BoardView";
 import BoardList from "@/view/board/BoardList";
 import BoardWrite from "@/view/board/BoardWrite";
+import BoardModify from "@/view/board/BoardModify";
 
 const routes = [
     {
@@ -18,6 +19,11 @@ const routes = [
         path: '/boards/notice/:boardNo',
         name: 'board_notice_view',
         component: BoardView
+    },
+    {
+        path: '/boards/modify/:boardNo',
+        name: 'board_modify',
+        component: BoardModify
     }
 ]
 
