@@ -66,6 +66,12 @@
         </div>
       </div>
 
+      <div v-if="boardDetail.existFile">
+        <div>
+          첨부파일 :
+        </div>
+      </div>
+
       <div class="Component-Reply">
         <ReplyWrite/>
       </div>
@@ -99,6 +105,11 @@ export default {
     const isDeleteModal = ref(false);
     const passwordCheck = ref('');
 
+    const fileList = ref([]);
+    const getFileList = async () => {
+      
+    }
+
     const deleteSubmit = async () => {
       const boardDTO = reactive({
         boardPassword: passwordCheck.value
@@ -126,6 +137,7 @@ export default {
     const getBoardDetail = async () => {
       const response = await boardsApi.getArticleView(router.currentRoute.value.params.boardNo);
       boardDetail.value = response.data.resultData;
+      console.log(boardDetail.value)
     };
 
     /**
@@ -151,6 +163,7 @@ export default {
 
     onMounted(() => {
       getBoardDetail();
+      getFileList();
     });
 
     return {
@@ -161,7 +174,8 @@ export default {
       isDeleteModal,
       boardDetail,
       passwordCheck,
-      deleteSubmit
+      deleteSubmit,
+      fileList
     }
   },
 }
