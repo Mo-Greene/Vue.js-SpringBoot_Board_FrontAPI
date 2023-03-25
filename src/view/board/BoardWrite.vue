@@ -63,8 +63,8 @@
 
 <script>
 import {ref} from "vue";
-import axios from "axios";
 import {useRouter} from "vue-router";
+import * as boardsApi from '@/api/boardsApi';
 
 export default {
   name: "BoardWrite",
@@ -100,9 +100,7 @@ export default {
       );
 
       try {
-        const response = await axios.post('boards/write', formData, {
-          headers: {'Content-Type': 'multipart/form-data'}
-        });
+        const response = await boardsApi.postArticle(formData);
 
         if (response.data.resultCode === 201) {
           alert('등록 성공');
@@ -114,7 +112,7 @@ export default {
     };
 
     /**
-     * 파일업로드
+     * 파일업로드시 파일 추출 메서드
      * @param event
      */
     const fileUpload = (event) => {

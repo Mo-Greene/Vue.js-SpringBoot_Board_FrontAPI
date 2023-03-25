@@ -11,10 +11,9 @@
   </div>
 </template>
 
-<!-- todo 댓글 부모컴포넌트에서 값들 전달해서 사용하자-->
 <script>
 import {inject, ref} from "vue";
-import axios from "axios";
+import * as replyApi from "@/api/replyApi"
 
 export default {
   name: "ReplyWrite",
@@ -31,9 +30,7 @@ export default {
         replyContent: replyContent.value
       }
 
-      const response = await axios.post("/boards/notice/reply/" + boardNo, replyDTO, {
-        headers: {'Content-Type': 'application/json'}
-      })
+      const response = await replyApi.postReply(boardNo, replyDTO);
 
       if (response.status === 201) {
         alert("댓글 등록 성공");

@@ -86,12 +86,12 @@
 </template>
 
 <script>
-import axios from "axios";
 import {onMounted, provide, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 import ReplyWrite from "@/components/ReplyWrite";
 import {dateFormat} from "@/assets/js/common";
 import * as boardsApi from '@/api/boardsApi';
+import * as fileApi from '@/api/fileApi';
 
 export default {
   name: "BoardView",
@@ -112,7 +112,7 @@ export default {
      * @returns {Promise<void>}
      */
     const getFileList = async () => {
-      const response = await axios.get('/files/' + router.currentRoute.value.params.boardNo);
+      const response = await fileApi.getFileList(router.currentRoute.value.params.boardNo);
       fileList.value = response.data.resultData
     }
 
@@ -124,11 +124,8 @@ export default {
      */
     const fileDownload = async (fileNo, fileOriginalName) => {
       try {
-        const response = await axios({
-          url: '/files/download/' + fileNo,
-          method: 'GET',
-          responseType: 'blob'
-        });
+        const response = await fileApi.downloadFile(fileNo);
+
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
@@ -150,16 +147,12 @@ export default {
         boardPassword: passwordCheck.value
       })
 
-      //todo 하나의 모달창으로 수정, 삭제를 한꺼번에 처리한다는게 과연 가능할까;
+      //todo 하나의 모달창으로 수정, 삭제를 한꺼번에 처리한다는게 과연 가능할까;;
       try {
-        const response = await axios.post('boards/password/' + router.currentRoute.value.params.boardNo,
-            boardDTO,
-            {headers: {'Content-Type': 'application/json'}}
-        );
+        const response = await boardsApi.deletePasswordCheck(router.currentRoute.value.params.boardNo, boardDTO);
 
         if (response.status === 204) {
           await findDelete();
-          alert('Delete Article')
         }
       } catch (error) {
         alert(error)
@@ -171,8 +164,7 @@ export default {
      * @returns {Promise<void>}
      */
     const findDelete = async () => {
-      console.log('delete?')
-      await axios.delete("boards/delete/" + router.currentRoute.value.params.boardNo);
+      await boardsApi.deleteArticle(router.currentRoute.value.params.boardNo);
       alert("삭제 완료");
       list();
     }

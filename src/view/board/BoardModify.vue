@@ -72,12 +72,13 @@ import {useRouter} from "vue-router/dist/vue-router";
 import * as boardsApi from "@/api/boardsApi";
 import {onMounted, reactive, ref} from "vue";
 import {dateFormat} from "@/assets/js/common";
-import axios from "axios";
 
 export default {
   name: "BoardModify",
   setup() {
     const router = useRouter();
+    const boardNo = router.currentRoute.value.params.boardNo;
+
     const boardDetail = ref([])
     const boardTitle = ref();
     const boardWriter = ref();
@@ -90,7 +91,7 @@ export default {
      * @returns {Promise<void>}
      */
     const getBoardDetail = async () => {
-      const response = await boardsApi.getArticleView(router.currentRoute.value.params.boardNo);
+      const response = await boardsApi.getArticleView(boardNo);
       boardDetail.value = response.data.resultData;
     };
 
@@ -108,11 +109,7 @@ export default {
       })
 
       try {
-        const response = await axios.put('boards/modify/' + router.currentRoute.value.params.boardNo, boardDTO, {
-          headers: {'Content-Type': 'application/json'}
-        });
-
-        console.log(response)
+        const response = await boardsApi.modifyArticle(boardNo, boardDTO);
 
         if (response.data.resultCode === 200) {
           alert('등록 성공');
