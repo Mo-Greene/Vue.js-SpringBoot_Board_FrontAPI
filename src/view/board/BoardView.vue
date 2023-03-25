@@ -98,7 +98,8 @@ export default {
   components: {ReplyWrite},
   setup() {
     const router = useRouter();
-    provide('boardNo', router.currentRoute.value.params.boardNo)
+    const boardNo = router.currentRoute.value.params.boardNo;
+    provide('boardNo', boardNo)
 
     const boardDetail = ref([]);
     const isModifyModal = ref(false);
@@ -112,7 +113,7 @@ export default {
      * @returns {Promise<void>}
      */
     const getFileList = async () => {
-      const response = await fileApi.getFileList(router.currentRoute.value.params.boardNo);
+      const response = await fileApi.getFileList(boardNo);
       fileList.value = response.data.resultData
     }
 
@@ -142,17 +143,38 @@ export default {
      * 삭제 모달창 - 삭제 콜백
      * @returns {Promise<void>}
      */
+    //todo 하나의 모달창으로 수정, 삭제를 한꺼번에 처리한다는게 과연 가능할까;;
     const deleteSubmit = async () => {
       const boardDTO = reactive({
         boardPassword: passwordCheck.value
       })
 
-      //todo 하나의 모달창으로 수정, 삭제를 한꺼번에 처리한다는게 과연 가능할까;;
       try {
-        const response = await boardsApi.deletePasswordCheck(router.currentRoute.value.params.boardNo, boardDTO);
+        const response = await boardsApi.passwordCheck(boardNo, boardDTO);
 
         if (response.status === 204) {
           await findDelete();
+        }
+      } catch (error) {
+        alert(error)
+      }
+    }
+
+    /**
+     * 수정 모달창
+     * @returns {Promise<void>}
+     */
+        //todo 삭제 모달창과 하나로 사용하고 싶다.
+    const modifySubmit = async () => {
+      const boardDTO = reactive({
+        boardPassword: passwordCheck.value
+      })
+
+      try {
+        const response = await boardsApi.passwordCheck(boardNo, boardDTO);
+
+        if (response.status === 204) {
+          modifyView(boardNo)
         }
       } catch (error) {
         alert(error)
@@ -188,6 +210,16 @@ export default {
       });
     };
 
+    /**
+     * 수정 페이지로 이동
+     * @param boardNo
+     */
+    const modifyView = (boardNo) => {
+      router.push({
+        path: "/boards/modify/" + boardNo
+      });
+    }
+
     onMounted(() => {
       getBoardDetail();
       getFileList();
@@ -202,6 +234,7 @@ export default {
       boardDetail,
       passwordCheck,
       deleteSubmit,
+      modifySubmit,
       fileList,
       fileDownload
     }

@@ -67,12 +67,14 @@
   </div>
 </template>
 
+
 <script>
 import {useRouter} from "vue-router/dist/vue-router";
 import * as boardsApi from "@/api/boardsApi";
 import {onMounted, reactive, ref} from "vue";
 import {dateFormat} from "@/assets/js/common";
 
+//todo 현재 모달창 성공여부 상관없이 url 입력시 바로 들어올 수 있다. 토큰을 사용해서 억제 시켜야되는지 궁금
 export default {
   name: "BoardModify",
   setup() {

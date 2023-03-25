@@ -54,7 +54,7 @@ export async function postArticle(formData) {
  * @param boardDTO
  * @returns {Promise<axios.AxiosResponse<any>>}
  */
-export async function deletePasswordCheck(boardNo, boardDTO) {
+export async function passwordCheck(boardNo, boardDTO) {
     return http.post('/boards/password/' + boardNo, boardDTO, {
         headers: {'Content-Type': 'application/json'}
     })
