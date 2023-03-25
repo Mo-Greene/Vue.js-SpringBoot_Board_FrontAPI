@@ -1,10 +1,5 @@
 # frontend
 
-## Project setup
-```
-npm install
-```
-
 ## todo
 - 공통으로 사용하는 함수는 common.js 로 빼놓자
 - 우선은 boardList 최우선으로 작업하자

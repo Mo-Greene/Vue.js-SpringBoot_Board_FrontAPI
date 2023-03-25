@@ -68,7 +68,7 @@
 
       <div v-if="boardDetail.existFile">
         <div :key="i" v-for="(file, i) in fileList">
-          첨부파일 : <a @click="fileDownload(file.fileNo)">{{ file.fileOriginalName }}</a>
+          첨부파일 : <a @click="fileDownload(file.fileNo, file.fileOriginalName)">{{ file.fileOriginalName }}</a>
         </div>
       </div>
 
@@ -113,7 +113,7 @@ export default {
     }
 
     //todo 파일 다운은 되는데 변경된 파일이 다운됨
-    const fileDownload = async (fileNo) => {
+    const fileDownload = async (fileNo, fileOriginalName) => {
       try {
         const response = await axios({
           url: '/files/download/' + fileNo,
@@ -123,7 +123,8 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', fileNo);
+
+        link.setAttribute('download', fileOriginalName);
         document.body.appendChild(link);
         link.click();
       } catch (error) {
