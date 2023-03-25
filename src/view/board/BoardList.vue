@@ -101,6 +101,10 @@ export default {
       return boardList.value.length;
     });
 
+    /**
+     * 검색조건
+     * @returns {Promise<void>}
+     */
     const submitQuery = async () => {
       const response = await axios.get("boards", {
         params: {
@@ -114,6 +118,10 @@ export default {
       boardList.value = response.data.resultData.board;
     };
 
+    /**
+     * 게시글 리스트
+     * @returns {Promise<void>}
+     */
     const getBoardList = async () => {
       const response = await boardsApi.getArticle();
       boardList.value = response.data.resultData.board;

@@ -107,12 +107,21 @@ export default {
 
     const fileList = ref([]);
 
+    /**
+     * 파일 조회 리스트
+     * @returns {Promise<void>}
+     */
     const getFileList = async () => {
       const response = await axios.get('/files/' + router.currentRoute.value.params.boardNo);
       fileList.value = response.data.resultData
     }
 
-    //todo 파일 다운은 되는데 변경된 파일이 다운됨
+    /**
+     * 파일 다운로드
+     * @param fileNo
+     * @param fileOriginalName
+     * @returns {Promise<void>}
+     */
     const fileDownload = async (fileNo, fileOriginalName) => {
       try {
         const response = await axios({
@@ -132,6 +141,10 @@ export default {
       }
     }
 
+    /**
+     * 삭제 모달창 - 삭제 콜백
+     * @returns {Promise<void>}
+     */
     const deleteSubmit = async () => {
       const boardDTO = reactive({
         boardPassword: passwordCheck.value
@@ -152,6 +165,18 @@ export default {
         alert(error)
       }
     }
+
+    /**
+     * 게시글 삭제
+     * @returns {Promise<void>}
+     */
+    const findDelete = async () => {
+      console.log('delete?')
+      await axios.delete("boards/delete/" + router.currentRoute.value.params.boardNo);
+      alert("삭제 완료");
+      list();
+    }
+
     /**
      * 게시글 상세조회
      * @returns {Promise<void>}
@@ -170,17 +195,6 @@ export default {
         path: "/boards"
       });
     };
-
-    /**
-     * 게시글 삭제
-     * @returns {Promise<void>}
-     */
-    const findDelete = async () => {
-      console.log('delete?')
-      await axios.delete("boards/delete/" + router.currentRoute.value.params.boardNo);
-      alert("삭제 완료");
-      list();
-    }
 
     onMounted(() => {
       getBoardDetail();

@@ -85,11 +85,19 @@ export default {
     const boardPassword = ref();
     const file = ref();
 
+    /**
+     * 게시글 가져오기
+     * @returns {Promise<void>}
+     */
     const getBoardDetail = async () => {
       const response = await boardsApi.getArticleView(router.currentRoute.value.params.boardNo);
       boardDetail.value = response.data.resultData;
     };
 
+    /**
+     * 수정 클릭
+     * @returns {Promise<void>}
+     */
     // todo 수정시 비밀번호가 필요없는데 또 들어가야된다고 뜬다. 확인해서 고치자
     const submit = async () => {
       const boardDTO = reactive({
@@ -125,6 +133,10 @@ export default {
       });
     };
 
+    /**
+     * 파일 업로드 '업로드만 구현'
+     * @param event
+     */
     const fileUpload = (event) => {
       this.file = event.target.files[0];
       console.log(this.file)

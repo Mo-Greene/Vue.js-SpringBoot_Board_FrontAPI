@@ -22,6 +22,10 @@ export default {
     const replyContent = ref();
     const boardNo = inject('boardNo');
 
+    /**
+     * 댓글 등록
+     * @returns {Promise<void>}
+     */
     const replyRegister = async () => {
       const replyDTO = {
         replyContent: replyContent.value

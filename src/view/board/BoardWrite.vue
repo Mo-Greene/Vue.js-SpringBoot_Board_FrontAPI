@@ -79,6 +79,10 @@ export default {
     const boardPasswordCheck = ref();
     const file = ref();
 
+    /**
+     * 게시글 등록
+     * @returns {Promise<void>}
+     */
     const submit = async () => {
       const formData = new FormData();
 
@@ -109,6 +113,10 @@ export default {
       }
     };
 
+    /**
+     * 파일업로드
+     * @param event
+     */
     const fileUpload = (event) => {
       this.file = event.target.files[0];
       console.log(this.file)
