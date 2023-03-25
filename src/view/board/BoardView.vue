@@ -67,8 +67,8 @@
       </div>
 
       <div v-if="boardDetail.existFile">
-        <div>
-          첨부파일 :
+        <div :key="i" v-for="(file, i) in fileList">
+          첨부파일 : <a @click="fileDownload(file.fileNo)">{{ file.fileOriginalName }}</a>
         </div>
       </div>
 
@@ -106,8 +106,29 @@ export default {
     const passwordCheck = ref('');
 
     const fileList = ref([]);
+
     const getFileList = async () => {
-      
+      const response = await axios.get('/files/' + router.currentRoute.value.params.boardNo);
+      fileList.value = response.data.resultData
+    }
+
+    //todo 파일 다운은 되는데 변경된 파일이 다운됨
+    const fileDownload = async (fileNo) => {
+      try {
+        const response = await axios({
+          url: '/files/download/' + fileNo,
+          method: 'GET',
+          responseType: 'blob'
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileNo);
+        document.body.appendChild(link);
+        link.click();
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     const deleteSubmit = async () => {
@@ -137,7 +158,6 @@ export default {
     const getBoardDetail = async () => {
       const response = await boardsApi.getArticleView(router.currentRoute.value.params.boardNo);
       boardDetail.value = response.data.resultData;
-      console.log(boardDetail.value)
     };
 
     /**
@@ -175,7 +195,8 @@ export default {
       boardDetail,
       passwordCheck,
       deleteSubmit,
-      fileList
+      fileList,
+      fileDownload
     }
   },
 }
