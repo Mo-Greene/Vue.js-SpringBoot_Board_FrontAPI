@@ -85,6 +85,7 @@ export default {
   name: "BoardList",
   components: {VueDatePicker},
   setup() {
+    //todo ref 권장
     const date = ref();
     const keyword = ref();
     const categoryNo = ref();

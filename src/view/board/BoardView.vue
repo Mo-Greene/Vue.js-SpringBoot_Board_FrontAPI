@@ -99,6 +99,7 @@ export default {
   setup() {
     const router = useRouter();
     const boardNo = router.currentRoute.value.params.boardNo;
+    //todo props 로 사용하자
     provide('boardNo', boardNo)
 
     const boardDetail = ref([]);
@@ -164,7 +165,7 @@ export default {
      * 수정 모달창
      * @returns {Promise<void>}
      */
-        //todo 삭제 모달창과 하나로 사용하고 싶다.
+    //todo 삭제 모달창과 하나로 사용하고 싶다.
     const modifySubmit = async () => {
       const boardDTO = reactive({
         boardPassword: passwordCheck.value

@@ -32,9 +32,9 @@ export default {
 
       const response = await replyApi.postReply(boardNo, replyDTO);
 
+      //todo reload 사용 금지! spa에선 댓글 성공시 이벤트 전달
       if (response.status === 201) {
         alert("댓글 등록 성공");
-        location.reload()
       }
     };
 
@@ -45,7 +45,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-
-</style>

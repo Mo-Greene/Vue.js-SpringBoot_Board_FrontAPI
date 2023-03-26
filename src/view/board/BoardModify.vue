@@ -67,7 +67,6 @@
   </div>
 </template>
 
-
 <script>
 import {useRouter} from "vue-router/dist/vue-router";
 import * as boardsApi from "@/api/boardsApi";
